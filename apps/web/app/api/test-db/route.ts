@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@pulsecrm/db';
-import { organizations, users } from '@pulsecrm/db';
+import { db } from '@/lib/db';
+import { organizations, users } from '@/lib/db-schema';
 
 export async function GET(request: NextRequest) {
   try {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@pulsecrm/db';
-import { documents, documentSignatures } from '@pulsecrm/db';
+import { db } from '@/lib/db';
+import { documents, documentSignatures } from '@/lib/db-schema';
 import { eq, and, desc } from 'drizzle-orm';
 
 // GET /api/documents - List all documents

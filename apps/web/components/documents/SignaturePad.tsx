@@ -1,3 +1,226 @@
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Pen, 
+  Type, 
+  Upload, 
+  Download, 
+  Check, 
+  X, 
+  FileText,
+  Trash2
+} from 'lucide-react';
+
+interface SignaturePadProps {
+  onSignatureComplete: (signatureData: string) => void;
+  onCancel: () => void;
+}
+
+export function SignaturePad({ onSignatureComplete, onCancel }: SignaturePadProps) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [hasSignature, setHasSignature] = useState(false);
+  const [signatureType, setSignatureType] = useState<'draw' | 'type' | 'upload'>('draw');
+  const [typedSignature, setTypedSignature] = useState('');
+
+  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    setIsDrawing(true);
+  };
+
+  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#000000';
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    
+    setHasSignature(true);
+  };
+
+  const stopDrawing = () => {
+    setIsDrawing(false);
+  };
+
+  const clearSignature = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setHasSignature(false);
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        setHasSignature(true);
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSignatureSubmit = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    if (signatureType === 'type' && typedSignature.trim()) {
+      // For typed signature, draw it on canvas first
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = '32px cursive';
+        ctx.fillStyle = '#000000';
+        ctx.textAlign = 'center';
+        ctx.fillText(typedSignature, canvas.width / 2, canvas.height / 2);
+      }
+    }
+
+    const signatureData = canvas.toDataURL();
+    onSignatureComplete(signatureData);
+  };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // Set canvas size
+    canvas.width = 400;
+    canvas.height = 200;
+
+    // Set canvas background to white
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+  }, []);
+
+  return (
+    <Card className="w-full max-w-2xl mx-auto">
+      <CardHeader>
+        <CardTitle>Electronic Signature</CardTitle>
+        <CardDescription>
+          Sign this document using one of the methods below
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Signature Type Selection */}
+        <div className="flex gap-2">
+          <Button
+            variant={signatureType === 'draw' ? 'default' : 'outline'}
+            onClick={() => setSignatureType('draw')}
+            size="sm"
+          >
+            <Pen className="h-4 w-4 mr-2" />
+            Draw
+          </Button>
+          <Button
+            variant={signatureType === 'type' ? 'default' : 'outline'}
+            onClick={() => setSignatureType('type')}
+            size="sm"
+          >
+            <Type className="h-4 w-4 mr-2" />
+            Type
+          </Button>
+          <Button
+            variant={signatureType === 'upload' ? 'default' : 'outline'}
+            onClick={() => setSignatureType('upload')}
+            size="sm"
+          >
+            <Upload className="h-4 w-4 mr-2" />
+            Upload
+          </Button>
+        </div>
+
+        {/* Signature Input Area */}
+        <div className="space-y-4">
+          {signatureType === 'draw' && (
+            <div className="space-y-2">
+              <div className="border-2 border-gray-300 rounded-lg p-4 bg-white">
+                <canvas
+                  ref={canvasRef}
+                  onMouseDown={startDrawing}
+                  onMouseMove={draw}
+                  onMouseUp={stopDrawing}
+                  onMouseLeave={stopDrawing}
+                  className="border border-gray-200 rounded cursor-crosshair w-full"
+                  style={{ maxWidth: '100%', height: 'auto' }}
+                />
+              </div>
+              <div className="flex justify-between items-center">
+                <p className="text-sm text-gray-500">Draw your signature above</p>
+                <Button variant="outline" size="sm" onClick={clearSignature}>
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Clear
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {signatureType === 'type' && (
+            <div className="space-y-2">
+              <input
+                type="text"
+                value={typedSignature}
+                onChange={(e) => setTypedSignature(e.target.value)}
+                placeholder="Type your full name here"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-cursive text-2xl text-center"
+                style={{ fontFamily: 'cursive' }}
+              />
+              <p className="text-sm text-gray-500 text-center">
+                Your typed name will be converted to a signature style
+              </p>
+            </div>
+          )}
+
+          {signatureType === 'upload' && (
+            <div className="space-y-2">
+              <p className="text-sm text-gray-500 text-center">
+                Upload an image of your signature (PNG, JPG, or GIF)
               </p>
               <div className="max-w-md mx-auto">
                 <input

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@pulsecrm/db';
-import { documentSignatures, documents } from '@pulsecrm/db';
+import { db } from '@/lib/db';
+import { documentSignatures, documents } from '@/lib/db-schema';
 import { eq, and } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 

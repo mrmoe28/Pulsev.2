@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@pulsecrm/db';
-import { documentSignatures } from '@pulsecrm/db';
+import { db } from '@/lib/db';
+import { documentSignatures } from '@/lib/db-schema';
 import { eq, and } from 'drizzle-orm';
 
 // POST /api/documents/signatures/sign - Complete signature
