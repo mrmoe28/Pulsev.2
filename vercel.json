@@ -1,5 +1,0 @@
-{
-  "version": 2,
-  "name": "pulsecrm-monorepo",
-  "comment": "This is a monorepo. For deployment, use the apps/web directory as the root directory in Vercel dashboard."
-}
