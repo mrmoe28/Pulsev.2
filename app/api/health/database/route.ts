@@ -3,13 +3,26 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { neon } from '@neondatabase/serverless';
-import { getDatabaseInfo } from '@pulsecrm/db';
+import { db } from '@/lib/db';
 
 // GET /api/health/database - Check database connection and info
 export async function GET(request: NextRequest) {
   try {
-    // Get database info using our optimized connection
-    const dbInfo = await getDatabaseInfo();
+    // Test basic database connection
+    let dbInfo = null;
+    try {
+      const sql = neon(process.env.DATABASE_URL!);
+      const result = await sql`SELECT 1 as test`;
+      dbInfo = {
+        connected: true,
+        test_query: result[0]?.test === 1 ? 'passed' : 'failed'
+      };
+    } catch (error) {
+      dbInfo = {
+        connected: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      };
+    }
     
     // Additional Neon-specific health checks
     let neonStatus = null;
