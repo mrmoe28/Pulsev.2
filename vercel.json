@@ -1,44 +1,5 @@
 {
   "version": 2,
-  "name": "pulsecrm",
-  "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npm run build",
-  "framework": "nextjs",
-  "outputDirectory": "apps/web/.next",
-  "regions": ["iad1"],
-  "env": {
-    "NODE_ENV": "production",
-    "VERCEL_FORCE_NO_BUILD_CACHE": "1"
-  },
-  "build": {
-    "env": {
-      "NODE_ENV": "production",
-      "TURBO_TELEMETRY_DISABLED": "1",
-      "VERCEL_FORCE_NO_BUILD_CACHE": "1"
-    }
-  },
-  "functions": {
-    "apps/web/app/api/**": {
-      "maxDuration": 30
-    }
-  },
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        }
-      ]
-    }
-  ]
+  "name": "pulsecrm-monorepo",
+  "comment": "This is a monorepo. For deployment, use the apps/web directory as the root directory in Vercel dashboard."
 }
