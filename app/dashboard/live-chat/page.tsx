@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
-import { DashboardLayout } from '../../../components/layout/dashboard-layout';
+import { DashboardLayout } from '@/components/core/layouts/DashboardLayout';
 
 interface Message {
   role: 'user' | 'assistant';

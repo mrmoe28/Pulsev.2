@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { DashboardLayout } from '../../../components/layout/dashboard-layout';
+import { DashboardLayout } from '@/components/core/layouts/DashboardLayout';
 
 interface ContractorEmployee {
   id: string;

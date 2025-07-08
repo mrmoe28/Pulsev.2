@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
-import { DashboardLayout } from '../../../components/layout/dashboard-layout';
+import { DashboardLayout } from '@/components/core/layouts/DashboardLayout';
 
 type Schedule = {
   date: string;

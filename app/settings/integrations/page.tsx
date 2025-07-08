@@ -1,4 +1,4 @@
-import { DashboardLayout } from '../../../components/layout/dashboard-layout';
+import { DashboardLayout } from '@/components/core/layouts/DashboardLayout';
 
 const apiKeys = [
   { id: 1, name: 'Mobile App API', key: 'pk_live_51H...', created: '2025-06-15', lastUsed: '2 hours ago', status: 'Active' },

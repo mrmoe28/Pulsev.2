@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import PDF viewer styles */
-@import './pdf-viewer.css';
-
 /* Theme-aware base styles */
 html {
   margin: 0;

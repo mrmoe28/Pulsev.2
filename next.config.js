@@ -7,12 +7,25 @@ const nextConfig = {
   // Transpile packages
   transpilePackages: [],
 
+  // Output configuration for serverless deployment
+  output: 'standalone',
+
   // TypeScript and ESLint configuration
   typescript: {
     ignoreBuildErrors: true, // Temporarily ignore for deployment
   },
   eslint: {
     ignoreDuringBuilds: true, // Temporarily ignore for deployment
+  },
+
+  // Disable static optimization for pages that require database
+  experimental: {
+    serverComponentsExternalPackages: ['@neondatabase/serverless', 'pg'],
+  },
+
+  // Generate build ID
+  generateBuildId: async () => {
+    return 'pulse-crm-build'
   },
 
   // Webpack configuration
@@ -72,18 +85,10 @@ const nextConfig = {
 
   // Experimental features
   experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-dropdown-menu'],
+    // Removed optimizePackageImports as it's Next.js 15+ only
   },
 
-  // Turbopack configuration (moved from experimental.turbo)
-  turbopack: {
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
-      },
-    },
-  },
+  // Remove turbopack as it's Next.js 15+ only
 
   // Headers for security
   async headers() {
