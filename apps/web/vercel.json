@@ -3,8 +3,8 @@
   "version": 2,
   "name": "pulse-crm",
   "framework": "nextjs",
-  "installCommand": "npm install --legacy-peer-deps",
-  "buildCommand": "npm run build",
+  "installCommand": "npm install --legacy-peer-deps --prefer-offline --no-audit",
+  "buildCommand": "npm install --legacy-peer-deps && npm run build",
   "outputDirectory": ".next",
   "regions": ["iad1"],
   "env": {
@@ -16,7 +16,11 @@
       "TURBO_TELEMETRY_DISABLED": "1",
       "ENABLE_EXPERIMENTAL_COREPACK": "0",
       "NPM_CONFIG_PACKAGE_MANAGER": "npm",
-      "COREPACK_ENABLE_STRICT": "0"
+      "COREPACK_ENABLE_STRICT": "0",
+      "PNPM_HOME": "",
+      "npm_config_user_agent": "npm",
+      "npm_execpath": "npm",
+      "SKIP_ENV_VALIDATION": "1"
     }
   },
   "functions": {
