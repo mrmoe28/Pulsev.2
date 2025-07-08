@@ -1,6 +1,20 @@
 {
+  "version": 2,
   "framework": "nextjs",
+  "installCommand": "npm run install-deps",
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "installCommand": "npm install"
+  "env": {
+    "ENABLE_EXPERIMENTAL_COREPACK": "0",
+    "COREPACK_ENABLE_STRICT": "0",
+    "npm_config_user_agent": "npm"
+  },
+  "build": {
+    "env": {
+      "ENABLE_EXPERIMENTAL_COREPACK": "0",
+      "COREPACK_ENABLE_STRICT": "0",
+      "NPM_CONFIG_PACKAGE_MANAGER": "npm",
+      "FORCE_COLOR": "0"
+    }
+  }
 }
