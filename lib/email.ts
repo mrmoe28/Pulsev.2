@@ -168,6 +168,41 @@ export async function sendSignatureRequestEmail({
   }
 }
 
+export async function sendPasswordChangedEmail({
+  email,
+  firstName
+}: {
+  email: string;
+  firstName: string;
+}) {
+  try {
+    await sendEmail({
+      to: email,
+      subject: 'Your Pulse CRM password has been changed',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">Password Changed Successfully</h2>
+          <p>Hello${firstName ? ` ${firstName}` : ''},</p>
+          <p>Your password for Pulse CRM has been successfully changed.</p>
+          <p>If you did not make this change, please contact support immediately.</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <p style="color: #666;">For your security, please ensure you are the only one with access to your account.</p>
+          </div>
+          <hr style="border: 1px solid #eee; margin: 30px 0;" />
+          <p style="color: #666; font-size: 12px;">
+            This is an automated message from Pulse CRM. Please do not reply to this email.
+          </p>
+        </div>
+      `
+    });
+
+    return { success: true, messageId: 'password-changed' };
+  } catch (error) {
+    console.error('Password changed email error:', error);
+    throw new Error('Failed to send password changed email');
+  }
+}
+
 export async function sendSignatureCompletedEmail({
   email,
   name,

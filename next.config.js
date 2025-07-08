@@ -7,8 +7,8 @@ const nextConfig = {
   // Transpile packages
   transpilePackages: [],
 
-  // Output configuration for serverless deployment
-  output: 'standalone',
+  // Vercel automatically handles serverless deployment
+  // output: 'standalone', // Remove this for Vercel deployment
 
   // TypeScript and ESLint configuration
   typescript: {
