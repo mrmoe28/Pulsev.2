@@ -3,9 +3,19 @@
     "development"
   ],
   "hints": {
-    "no-inline-styles": "off",
-    "button-type": "off",
-    "axe/name-role-value": "off",
-    "axe/forms": "off"
+    "axe/name-role-value": [
+      "default",
+      {
+        "button-name": "off"
+      }
+    ],
+    "axe/forms": [
+      "default",
+      {
+        "label": "off",
+        "select-name": "off"
+      }
+    ],
+    "no-inline-styles": "off"
   }
 }
