@@ -13,7 +13,10 @@
   "build": {
     "env": {
       "NODE_ENV": "production",
-      "TURBO_TELEMETRY_DISABLED": "1"
+      "TURBO_TELEMETRY_DISABLED": "1",
+      "ENABLE_EXPERIMENTAL_COREPACK": "0",
+      "NPM_CONFIG_PACKAGE_MANAGER": "npm",
+      "COREPACK_ENABLE_STRICT": "0"
     }
   },
   "functions": {
