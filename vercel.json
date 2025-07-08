@@ -1,20 +1,18 @@
 {
   "version": 2,
   "framework": "nextjs",
-  "installCommand": "npm run install-deps",
+  "installCommand": "npm install --legacy-peer-deps",
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
+  "devCommand": "npm run dev",
   "env": {
     "ENABLE_EXPERIMENTAL_COREPACK": "0",
-    "COREPACK_ENABLE_STRICT": "0",
     "npm_config_user_agent": "npm"
   },
   "build": {
     "env": {
-      "ENABLE_EXPERIMENTAL_COREPACK": "0",
-      "COREPACK_ENABLE_STRICT": "0",
-      "NPM_CONFIG_PACKAGE_MANAGER": "npm",
-      "FORCE_COLOR": "0"
+      "NEXT_TELEMETRY_DISABLED": "1",
+      "NODE_OPTIONS": "--max-old-space-size=4096"
     }
   }
 }
