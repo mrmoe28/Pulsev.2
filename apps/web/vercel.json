@@ -1,4 +1,5 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
   "name": "pulse-crm",
   "framework": "nextjs",
@@ -17,12 +18,53 @@
   },
   "functions": {
     "app/api/**": {
-      "maxDuration": 30
+      "maxDuration": 30,
+      "memory": 1024
+    },
+    "app/api/files/**": {
+      "maxDuration": 60,
+      "memory": 2048
+    },
+    "app/api/documents/signatures/**": {
+      "maxDuration": 45,
+      "memory": 1536
     }
+  },
+  "images": {
+    "sizes": [16, 32, 48, 64, 96, 128, 256, 384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    "formats": ["image/avif", "image/webp"],
+    "minimumCacheTTL": 60,
+    "qualities": [50, 75, 90],
+    "remotePatterns": [
+      {
+        "protocol": "https",
+        "hostname": "**"
+      }
+    ],
+    "dangerouslyAllowSVG": false,
+    "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;",
+    "contentDispositionType": "inline"
   },
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/api/files/:path*",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/((?!api/files).*)",
       "headers": [
         {
           "key": "X-Frame-Options",
@@ -37,16 +79,29 @@
           "value": "strict-origin-when-cross-origin"
         },
         {
-          "key": "X-Robots-Tag",
-          "value": "noindex"
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
         }
       ]
     }
   ],
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/dashboard/crew/:path*",
+      "destination": "/dashboard/contractors/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/app/api/$1"
+      "source": "/api/v1/:path*",
+      "destination": "/api/:path*"
     }
   ]
 }
