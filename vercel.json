@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "framework": "nextjs",
+  "rootDirectory": "apps/web",
+  "env": {
+    "ENABLE_EXPERIMENTAL_COREPACK": "0",
+    "npm_config_user_agent": "npm"
+  }
+}

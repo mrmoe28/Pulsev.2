@@ -1,0 +1,25 @@
+# Vercel ignore file
+node_modules
+.next
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.DS_Store
+*.tgz
+*.tar.gz
+.cache
+.parcel-cache
+.nyc_output
+.vercel
+.turbo
+dist
+coverage
+.git
+*.md
+!README.md
+apps/web/node_modules/.cache
+docker/
+scripts/
+migrations/
+*.log
