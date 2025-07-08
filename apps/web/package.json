@@ -13,7 +13,7 @@
     "lint:fix": "next lint --fix",
     "start": "next start --port 3010",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf .next .turbo",
+    "clean": "rm -rf .next",
     "postbuild": "echo 'Build completed successfully!'",
     "vercel-build": "next build"
   },
