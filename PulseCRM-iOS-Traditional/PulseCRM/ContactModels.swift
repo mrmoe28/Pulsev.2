@@ -150,14 +150,35 @@ class ContactManager: ObservableObject {
     }
     
     private func loadContacts() {
-        if let data = UserDefaults.standard.data(forKey: "pulse_contacts"),
-           let decoded = try? JSONDecoder().decode([Contact].self, from: data) {
-            contacts = decoded
-            print("Debug: Contacts loaded from UserDefaults. Count: \(contacts.count)")
+        print("Debug: loadContacts() called - starting contact loading process")
+        
+        // Check all UserDefaults keys first
+        let allKeys = UserDefaults.standard.dictionaryRepresentation().keys
+        print("Debug: Total UserDefaults keys: \(allKeys.count)")
+        let pulseKeys = allKeys.filter { $0.contains("pulse") }
+        print("Debug: Pulse-related keys: \(pulseKeys)")
+        
+        if let data = UserDefaults.standard.data(forKey: "pulse_contacts") {
+            print("Debug: Found pulse_contacts data - size: \(data.count) bytes")
+            
+            do {
+                let decoded = try JSONDecoder().decode([Contact].self, from: data)
+                contacts = decoded
+                print("Debug: Successfully decoded \(contacts.count) contacts")
+                for (index, contact) in contacts.enumerated() {
+                    print("Debug: Contact \(index + 1): \(contact.fullName) (\(contact.email))")
+                }
+            } catch {
+                print("Debug: ERROR - Failed to decode contacts: \(error)")
+                contacts = []
+            }
         } else {
+            print("Debug: No pulse_contacts data found in UserDefaults")
             contacts = [] // Start with empty contacts list
-            print("Debug: No saved contacts found, starting with empty list")
+            print("Debug: Starting with empty contact list")
         }
+        
+        print("Debug: loadContacts() completed - final contact count: \(contacts.count)")
     }
     
     private func saveContacts() {

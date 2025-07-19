@@ -21,11 +21,10 @@ struct ContactFormView: View {
     
     var body: some View {
         NavigationView {
-            Form {
-                // Profile Image Section
-                Section {
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Profile Image Section
                     VStack(spacing: 16) {
-                        // Profile Image
                         Button(action: { showingImagePicker = true }) {
                             ZStack {
                                 if let imageData = profileImageData ?? contact.profileImage,
@@ -33,7 +32,7 @@ struct ContactFormView: View {
                                     Image(uiImage: uiImage)
                                         .resizable()
                                         .scaledToFill()
-                                        .frame(width: 100, height: 100)
+                                        .frame(width: 120, height: 120)
                                         .clipShape(Circle())
                                         .overlay(
                                             Circle()
@@ -41,10 +40,10 @@ struct ContactFormView: View {
                                         )
                                 } else {
                                     Circle()
-                                        .fill(Color.gray.opacity(0.3))
-                                        .frame(width: 100, height: 100)
+                                        .fill(Color.gray.opacity(0.2))
+                                        .frame(width: 120, height: 120)
                                         .overlay(
-                                            VStack {
+                                            VStack(spacing: 8) {
                                                 Image(systemName: "camera.fill")
                                                     .font(.title2)
                                                     .foregroundColor(.gray)
@@ -55,84 +54,111 @@ struct ContactFormView: View {
                                         )
                                 }
                                 
-                                // Camera overlay
-                                Circle()
-                                    .fill(Color.black.opacity(0.3))
-                                    .frame(width: 100, height: 100)
-                                    .overlay(
-                                        Image(systemName: "camera")
-                                            .foregroundColor(.white)
-                                            .font(.title3)
-                                    )
-                                    .opacity(profileImageData != nil || contact.profileImage != nil ? 0.8 : 0)
+                                // Camera overlay for existing images
+                                if profileImageData != nil || contact.profileImage != nil {
+                                    Circle()
+                                        .fill(Color.black.opacity(0.4))
+                                        .frame(width: 120, height: 120)
+                                        .overlay(
+                                            Image(systemName: "camera")
+                                                .foregroundColor(.white)
+                                                .font(.title2)
+                                        )
+                                }
                             }
                         }
                         .photosPicker(isPresented: $showingImagePicker, selection: $selectedPhoto, matching: .images)
                     }
-                    .frame(maxWidth: .infinity)
-                    .listRowBackground(Color.clear)
-                }
-                
-                // Basic Information
-                Section("Basic Information") {
-                    TextField("First Name", text: $contact.firstName)
-                        .textInputAutocapitalization(.words)
+                    .padding(.top, 20)
                     
-                    TextField("Last Name", text: $contact.lastName)
-                        .textInputAutocapitalization(.words)
-                    
-                    TextField("Email", text: $contact.email)
-                        .keyboardType(.emailAddress)
-                        .textInputAutocapitalization(.never)
-                    
-                    TextField("Phone", text: $contact.phone)
-                        .keyboardType(.phonePad)
-                }
-                
-                // Work Information
-                Section("Work Information") {
-                    TextField("Company", text: $contact.company)
-                        .textInputAutocapitalization(.words)
-                    
-                    TextField("Position", text: $contact.position)
-                        .textInputAutocapitalization(.words)
-                }
-                
-                // Address Information
-                Section("Address") {
-                    TextField("Street Address", text: $contact.address)
-                        .textInputAutocapitalization(.words)
-                    
-                    HStack {
-                        TextField("City", text: $contact.city)
-                            .textInputAutocapitalization(.words)
-                        
-                        TextField("State", text: $contact.state)
-                            .textInputAutocapitalization(.characters)
-                            .frame(maxWidth: 80)
-                        
-                        TextField("ZIP", text: $contact.zipCode)
-                            .keyboardType(.numberPad)
-                            .frame(maxWidth: 80)
+                    // Basic Information Section
+                    FormSectionView(title: "Basic Information") {
+                        VStack(spacing: 16) {
+                            CustomTextField("First Name", text: $contact.firstName)
+                                .textInputAutocapitalization(.words)
+                            
+                            CustomTextField("Last Name", text: $contact.lastName)
+                                .textInputAutocapitalization(.words)
+                            
+                            CustomTextField("Email", text: $contact.email)
+                                .keyboardType(.emailAddress)
+                                .textInputAutocapitalization(.never)
+                            
+                            CustomTextField("Phone", text: $contact.phone)
+                                .keyboardType(.phonePad)
+                        }
                     }
-                }
-                
-                // Notes
-                Section("Notes") {
-                    TextEditor(text: $contact.notes)
-                        .frame(minHeight: 100)
-                }
-                
-                // Delete Button (only for editing)
-                if isEditing {
-                    Section {
+                    
+                    // Work Information Section
+                    FormSectionView(title: "Work Information") {
+                        VStack(spacing: 16) {
+                            CustomTextField("Company", text: $contact.company)
+                                .textInputAutocapitalization(.words)
+                            
+                            CustomTextField("Position", text: $contact.position)
+                                .textInputAutocapitalization(.words)
+                        }
+                    }
+                    
+                    // Address Information Section
+                    FormSectionView(title: "Address") {
+                        VStack(spacing: 16) {
+                            CustomTextField("Street Address", text: $contact.address)
+                                .textInputAutocapitalization(.words)
+                            
+                            HStack(spacing: 12) {
+                                CustomTextField("City", text: $contact.city)
+                                    .textInputAutocapitalization(.words)
+                                
+                                CustomTextField("State", text: $contact.state)
+                                    .textInputAutocapitalization(.characters)
+                                    .frame(maxWidth: 100)
+                                
+                                CustomTextField("ZIP", text: $contact.zipCode)
+                                    .keyboardType(.numberPad)
+                                    .frame(maxWidth: 100)
+                            }
+                        }
+                    }
+                    
+                    // Notes Section
+                    FormSectionView(title: "Notes") {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Additional Notes")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            
+                            TextEditor(text: $contact.notes)
+                                .frame(minHeight: 120)
+                                .padding(8)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color(.systemGray4), lineWidth: 1)
+                                )
+                        }
+                    }
+                    
+                    // Delete Button (only for editing)
+                    if isEditing {
                         Button("Delete Contact") {
                             showingDeleteAlert = true
                         }
                         .foregroundColor(.red)
-                        .frame(maxWidth: .infinity, alignment: .center)
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(Color.red.opacity(0.1))
+                        .cornerRadius(12)
+                        .padding(.top, 20)
                     }
+                    
+                    // Bottom spacing for keyboard
+                    Spacer()
+                        .frame(height: 100)
                 }
+                .padding(.horizontal, 20)
             }
             .navigationTitle(isEditing ? "Edit Contact" : "New Contact")
             .navigationBarTitleDisplayMode(.inline)
@@ -142,6 +168,7 @@ struct ContactFormView: View {
                     Button("Cancel") {
                         dismiss()
                     }
+                    .foregroundColor(.orange)
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {
@@ -149,6 +176,7 @@ struct ContactFormView: View {
                         saveContact()
                     }
                     .fontWeight(.semibold)
+                    .foregroundColor(.orange)
                     .disabled(contact.firstName.isEmpty && contact.lastName.isEmpty)
                 }
             }
@@ -214,5 +242,61 @@ struct ContactFormView: View {
             object: nil,
             userInfo: ["message": message]
         )
+    }
+}
+
+// MARK: - Supporting Views
+
+struct FormSectionView<Content: View>: View {
+    let title: String
+    let content: Content
+    
+    init(title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.primary)
+                .padding(.leading, 4)
+            
+            VStack(spacing: 16) {
+                content
+            }
+            .padding(16)
+            .background(Color(.systemGray6))
+            .cornerRadius(12)
+        }
+    }
+}
+
+struct CustomTextField: View {
+    let placeholder: String
+    @Binding var text: String
+    
+    init(_ placeholder: String, text: Binding<String>) {
+        self.placeholder = placeholder
+        self._text = text
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(placeholder)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .padding(.leading, 4)
+            
+            TextField(placeholder, text: $text)
+                .padding(12)
+                .background(Color(.systemBackground))
+                .cornerRadius(8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color(.systemGray4), lineWidth: 1)
+                )
+        }
     }
 }
